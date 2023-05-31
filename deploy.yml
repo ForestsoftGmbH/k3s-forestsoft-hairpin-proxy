@@ -105,7 +105,7 @@ rules:
     resources:
       - configmaps
     resourceNames:
-      - coredns
+      - rke2-coredns-rke2-coredns
     verbs:
       - get
       - watch
@@ -151,8 +151,13 @@ spec:
         runAsUser: 405
         runAsGroup: 65533
       containers:
-        - image: compumike/hairpin-proxy-controller:0.2.1
+        - image: forestsoft/hairpin-proxy-controller:0.2.2
           name: main
+          env:
+            - name: COREDNS_SERVICENAME
+              value: "rke2-coredns-rke2-coredns"
+            - name: TARGET_SERVER
+              value: "ingress-nginx-controller.ingress-nginx.svc.cluster.local"
           resources:
             requests:
               memory: "50Mi"

@@ -1,4 +1,6 @@
 #!/bin/sh
 set -e
-docker build -t compumike/hairpin-proxy-controller .
-docker push compumike/hairpin-proxy-controller
+docker build -t forestsoft/hairpin-proxy-controller .
+docker tag forestsoft/hairpin-proxy-controller forestsoft/hairpin-proxy-controller:0.2.2
+docker push forestsoft/hairpin-proxy-controller
+docker push forestsoft/hairpin-proxy-controller:0.2.2

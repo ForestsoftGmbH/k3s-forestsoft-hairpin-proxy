@@ -10,6 +10,7 @@ class HairpinProxyController
   COMMENT_LINE_SUFFIX = "# Added by hairpin-proxy"
   DNS_REWRITE_DESTINATION = "hairpin-proxy.hairpin-proxy.svc.cluster.local"
   POLL_INTERVAL = ENV.fetch("POLL_INTERVAL", "15").to_i.clamp(1..)
+  COREDNS_SERVICENAME = ENV.fetch("COREDNS_SERVICENAME", "coredns")
 
   # Kubernetes <= 1.18 puts Ingress in "extensions/v1beta1"
   # Kubernetes >= 1.19 puts Ingress in "networking.k8s.io/v1"
@@ -60,7 +61,7 @@ class HairpinProxyController
   def check_and_rewrite_coredns
     @log.info("Polling all Ingress resources and CoreDNS configuration...")
     hosts = fetch_ingress_hosts
-    cm = @k8s.api.resource("configmaps", namespace: "kube-system").get("coredns")
+    cm = @k8s.api.resource("configmaps", namespace: "kube-system").get(COREDNS_SERVICENAME)
 
     old_corefile = cm.data.Corefile
     new_corefile = coredns_corefile_with_rewrite_rules(old_corefile, hosts)
