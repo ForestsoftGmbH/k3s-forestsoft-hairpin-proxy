@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: hairpin-proxy-controller-sa-binding
+subjects:
+- kind: ServiceAccount
+  name: hairpin-proxy-controller-sa
+  namespace: hairpin-proxy
+roleRef:
+  kind: ClusterRole
+  name: hairpin-proxy-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: hairpin-proxy-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "update", "patch"]
+  resourceNames: ["rke2-coredns-rke2-coredns"]  # Ersetze <deine-configmap-name> durch den tatsächlichen Namen deiner ConfigMap
+  namespace: kube-system
